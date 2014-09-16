@@ -17,6 +17,8 @@
 .gd-ui-json-explorer .string {
   color: green;
   white-space: pre-wrap;
+  margin-left: 0;
+  display: inline;
 }
 
 .gd-ui-json-explorer .collapser {

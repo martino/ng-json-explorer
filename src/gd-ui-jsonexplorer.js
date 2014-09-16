@@ -128,7 +128,6 @@ angular.module('gd.ui.jsonexplorer', [])
 	      				output += '</li>';
 	      				numProps--;
     				}
-    
 	    			if (hasContents) {
 	    				if (collapsed) {
 	    					if (JSON.stringify(json) != val) {
@@ -145,7 +144,20 @@ angular.module('gd.ui.jsonexplorer', [])
 	    
 	    			return output;
 				};
-				
+
+				formatter.stringToHtml = function (strValue) {
+    				var outputLong = strValue
+	    				, maxLen = 130
+	    				, ellipsis = (strValue.length > maxLen ? '&hellip;' : '')
+	    				, outputShort = strValue.substring(0, maxLen) + ellipsis;
+
+  					if (ellipsis === '')
+  						output = '"<ul class="obj string">' + outputLong + '</ul>"';
+  					else
+  					 output = '"<ul class="obj collapsible string">' + outputLong + '</ul><span style="display:none" class="ellipsis string">' + outputShort + '</span>"';
+	    			return output;
+				};
+
 				formatter.valueToHtml = function (value) {
 					var type = (value != null) && value.constructor;
 					var output = '';
@@ -171,7 +183,7 @@ angular.module('gd.ui.jsonexplorer', [])
         					output += '<a href="' + value + '"><span class="q">"</span>' + 
         						this.jsString(value) + '<span class="q">"</span></a>';
       					} else {
-        					output += '<span class="string">"' + this.jsString(value) + '"</span>';
+      						output += this.stringToHtml(this.jsString(value));
       					}
 					}
 
@@ -191,7 +203,6 @@ angular.module('gd.ui.jsonexplorer', [])
 				function collapse (evt) {
 					var collapser = evt.target;
     				var target = collapser.parentNode.getElementsByClassName('collapsible');
-
     				if (!target.length) {
       					return;
     				}
@@ -199,12 +210,14 @@ angular.module('gd.ui.jsonexplorer', [])
     				target = target[0];
 
     				var ellipsis = target.parentNode.getElementsByClassName('ellipsis')[0];
-    				if (target.style.display == 'none') {
+    				if (target.style.display === 'none') {
 				      target.style.display = '';
+				      ellipsis.style.display = 'none';
 				      collapser.innerHTML = '-';
     				} else {
     				
     				  target.style.display = 'none';
+    				  ellipsis.style.display = '';
 				      collapser.innerHTML = '+';
     				}
 				}
