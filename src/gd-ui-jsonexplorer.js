@@ -196,32 +196,32 @@ angular.module('gd.ui.jsonexplorer', [])
 				formatter.jsonToHtml = function (json) {
 					return '<div class="gd-ui-json-explorer">' + this.valueToHtml(json) + '</div>';
 				};
-				
+
 				var json = JSON.parse(val);
 				var x = formatter.jsonToHtml(json);
 				elem.html(x);
 				function collapse (evt) {
 					var collapser = evt.target;
-    				var target = collapser.parentNode.getElementsByClassName('collapsible');
-    				if (!target.length) {
+    				var targets = collapser.parentNode.getElementsByClassName('collapsible'), i;
+    				if (!targets.length) {
       					return;
     				}
+    				for (i in targets) {
+    					var currentTarget = targets[i]
+    						, ellipsis = currentTarget.parentNode.getElementsByClassName('ellipsis')[0];
 
-    				target = target[0];
-
-    				var ellipsis = target.parentNode.getElementsByClassName('ellipsis')[0];
-    				if (target.style.display === 'none') {
-				      target.style.display = '';
-				      ellipsis.style.display = 'none';
-				      collapser.innerHTML = '-';
-    				} else {
-    				
-    				  target.style.display = 'none';
-    				  ellipsis.style.display = '';
-				      collapser.innerHTML = '+';
+	    				if (currentTarget.style.display === 'none') {
+					      currentTarget.style.display = '';
+					      ellipsis.style.display = 'none';
+					      collapser.innerHTML = '-';
+	    				} else {
+	    				  currentTarget.style.display = 'none';
+	    				  ellipsis.style.display = '';
+					      collapser.innerHTML = '+';
+	    				}
     				}
 				}
-				
+
 				var collections = angular.element(elem)[0].getElementsByTagName('ul');
 				for (var i = 0; i < collections.length; i++) {
 					var collectionItem = collections[i];
@@ -236,7 +236,7 @@ angular.module('gd.ui.jsonexplorer', [])
 							}
 							collapser.addEventListener('click', collapse, false);
 							collectionItem.parentNode.insertBefore(collapser, collectionItem.parentNode.firstChild);
-						}						
+						}
 					}
 				}
 			});
